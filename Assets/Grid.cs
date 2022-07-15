@@ -3,11 +3,14 @@ using System.Collections.Generic;
 
 public class Grid : MonoBehaviour
 {
+    public GameObject[] treePrefabs;
     public Material terrainMaterial;
     public Material edgeMaterial;
     public float waterLevel = .4f;
     public float scale = .1f;
-    public int size = 1000;
+    public float treeNoiseScale = .05f;
+    public float treeDensity = .5f;
+    public int size = 100;
 
     Cell[,] grid;
 
@@ -52,6 +55,7 @@ public class Grid : MonoBehaviour
         DrawTerrainMesh(grid);
         DrawEdgeMesh(grid);
         DrawTexture(grid);
+        GenerateTrees(grid);
     }
 
     void DrawTerrainMesh(Cell[,] grid)
@@ -216,6 +220,40 @@ public class Grid : MonoBehaviour
         MeshRenderer meshRenderer = gameObject.GetComponent<MeshRenderer>();
         meshRenderer.material = terrainMaterial;
         meshRenderer.material.mainTexture = texture;
+    }
+
+    void GenerateTrees(Cell[,] grid)
+    {
+        float[,] noiseMap = new float[size, size];
+        (float xOffset, float yOffset) = (Random.Range(-10000f, 10000f), Random.Range(-10000f, 10000f));
+        for (int y = 0; y < size; y++)
+        {
+            for (int x = 0; x < size; x++)
+            {
+                float noiseValue = Mathf.PerlinNoise(x * treeNoiseScale + xOffset, y * treeNoiseScale + yOffset);
+                noiseMap[x, y] = noiseValue;
+            }
+        }
+
+        for (int y = 0; y < size; y++)
+        {
+            for (int x = 0; x < size; x++)
+            {
+                Cell cell = grid[x, y];
+                if (!cell.isWater)
+                {
+                    float v = Random.Range(0f, treeDensity);
+                    if (noiseMap[x, y] < v)
+                    {
+                        GameObject prefab = treePrefabs[Random.Range(0, treePrefabs.Length)];
+                        GameObject tree = Instantiate(prefab, transform);
+                        tree.transform.position = new Vector3(x, 0, y);
+                        tree.transform.rotation = Quaternion.Euler(0, Random.Range(0, 360f), 0);
+                        tree.transform.localScale = Vector3.one * Random.Range(.8f, 1.2f);
+                    }
+                }
+            }
+        }
     }
 
     void OnDrawGizmos()
