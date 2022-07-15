@@ -7,7 +7,7 @@ public class Grid : MonoBehaviour
     public Material edgeMaterial;
     public float waterLevel = .4f;
     public float scale = .1f;
-    public int size = 100;
+    public int size = 1000;
 
     Cell[,] grid;
 
