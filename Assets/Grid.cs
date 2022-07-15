@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-
+using UnityEngine.SceneManagement;
 public class Grid : MonoBehaviour
 {
     public GameObject[] treePrefabs;
@@ -272,5 +272,10 @@ public class Grid : MonoBehaviour
                 Gizmos.DrawCube(pos, Vector3.one);
             }
         }
+    }
+
+    public void Reload()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
