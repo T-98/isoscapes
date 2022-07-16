@@ -897,6 +897,7 @@ MonoBehaviour:
   - Grass
   - Mountain
   - Sand
+  cube: {fileID: 662176788567759991, guid: e6afb93f4f165e84d8285255751a9f49, type: 3}
 --- !u!4 &1707433443
 Transform:
   m_ObjectHideFlags: 0

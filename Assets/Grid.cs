@@ -13,13 +13,23 @@ public class Grid : MonoBehaviour
     public int size = 100;
     public List<string> w, g, s, m, v; // Five different terrain types which have unique relationships with each other
 
+    public GameObject cube;
+    float heightScaling = 3f;
+
     Cell[,] grid;
+
+    float[,] noiseMap;
+    GameObject[,] cubeMap;
 
     void Start()
     {
+        noiseMap = new float[size, size];
+        cubeMap = new GameObject[size, size];
+
+
         //noise map populates an arbitrary map with perlin noise values
         //Used as a context for mesh placement in the grid
-        float[,] noiseMap = new float[size, size];
+        // float[,] noiseMap = new float[size, size];
         (float xOffset, float yOffset) = (Random.Range(-10000f, 10000f), Random.Range(-10000f, 10000f));
         for (int y = 0; y < size; y++)
         {
@@ -94,8 +104,14 @@ public class Grid : MonoBehaviour
             for (int x = 0; x < size; x++)
             {
                 Cell cell = grid[x, y];
+
+                
                 if (!cell.isWater)
                 {
+                    cubeMap[x,y] = Instantiate(cube, new Vector3(x, 0, y), Quaternion.identity);
+                    cubeMap[x,y].transform.localScale = new Vector3(1, heightScaling * noiseMap[x, y], 1);
+                    
+
                     Vector3 a = new Vector3(x - .5f, 0, y + .5f);
                     Vector3 b = new Vector3(x + .5f, 0, y + .5f);
                     Vector3 c = new Vector3(x - .5f, 0, y - .5f);
@@ -271,8 +287,8 @@ public class Grid : MonoBehaviour
                     if (noiseMap[x, y] < v)
                     {
                         GameObject prefab = treePrefabs[Random.Range(0, treePrefabs.Length)];
-                        GameObject tree = Instantiate(prefab, transform);
-                        tree.transform.position = new Vector3(x, 0, y);
+                        GameObject tree = Instantiate(prefab, cubeMap[x,y].transform.GetChild(1).transform.position, Quaternion.identity);
+                        // tree.transform.position = new Vector3(x, 0, y);
                         tree.transform.rotation = Quaternion.Euler(0, Random.Range(0, 360f), 0);
                         tree.transform.localScale = Vector3.one * Random.Range(.8f, 1.2f);
                     }
