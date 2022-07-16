@@ -11,11 +11,14 @@ public class Grid : MonoBehaviour
     public float treeNoiseScale = .05f;
     public float treeDensity = .5f;
     public int size = 100;
+    public List<string> w, g, s, m, v; // Five different terrain types which have unique relationships with each other
 
     Cell[,] grid;
 
     void Start()
     {
+        //noise map populates an arbitrary map with perlin noise values
+        //Used as a context for mesh placement in the grid
         float[,] noiseMap = new float[size, size];
         (float xOffset, float yOffset) = (Random.Range(-10000f, 10000f), Random.Range(-10000f, 10000f));
         for (int y = 0; y < size; y++)
@@ -27,6 +30,8 @@ public class Grid : MonoBehaviour
             }
         }
 
+        //fallout map populates an arbitrary map with random floats
+        //Subtracted with noise map to generate islands
         float[,] falloffMap = new float[size, size];
         for (int y = 0; y < size; y++)
         {
@@ -39,6 +44,7 @@ public class Grid : MonoBehaviour
             }
         }
 
+        //Grid where the nature of the mesh is decided based upon the difference between the noisemap and falloff map
         grid = new Cell[size, size];
         for (int y = 0; y < size; y++)
         {
@@ -51,12 +57,31 @@ public class Grid : MonoBehaviour
                 grid[x, y] = cell;
             }
         }
+        
+        //Hash map to maintain the adjacency lists for autotiling amongst different terrain elements
+        Dictionary<string, List<string>> hash = new Dictionary<string, List<string>>();
+        hash.Add("Water", w);
+        hash.Add("Grass", g);
+        hash.Add("Sand", s);
+        hash.Add("Mountain", m);
+
+        foreach (KeyValuePair<string, List<string>> pair in hash)
+        {
+            Debug.Log("KEY: " + pair.Key);
+            Debug.Log("VALUE: ");
+            foreach (string val in pair.Value) Debug.Log(val + " ");
+            Debug.Log("\n");
+        }
 
         DrawTerrainMesh(grid);
         DrawEdgeMesh(grid);
         DrawTexture(grid);
         GenerateTrees(grid);
     }
+
+
+
+
 
     void DrawTerrainMesh(Cell[,] grid)
     {

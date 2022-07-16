@@ -881,6 +881,22 @@ MonoBehaviour:
   treeNoiseScale: 0.05
   treeDensity: 0.5
   size: 100
+  w:
+  - Sand
+  g:
+  - Mountain
+  - Valley
+  - Sand
+  s:
+  - Mountain
+  - Grass
+  m:
+  - Valley
+  - Grass
+  v:
+  - Grass
+  - Mountain
+  - Sand
 --- !u!4 &1707433443
 Transform:
   m_ObjectHideFlags: 0
