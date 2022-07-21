@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 public class Grid : MonoBehaviour
 {
-    public GameObject[] treePrefabs;
-    public GameObject[] mushroomPrefabs;
+    public GameObject[] pineTreePrefabs;
+    public GameObject[] roundTreePrefabs;
     public GameObject[] rockPrefabs;
+    public GameObject[] grassPrefabs;
+    public GameObject[] mushroomPrefabs;
     public GameObject[] flowerPrefabs;
+    public GameObject[] forestLitterPrefabs;
+
+
     public Material terrainMaterial;
     public Material edgeMaterial;
     public float waterLevel = 4f;
@@ -20,7 +25,7 @@ public class Grid : MonoBehaviour
     public List<string> w, g, s, m, v; // Five different terrain types which have unique relationships with each other
 
     public GameObject cube;
-    public float heightScaling = 1f;
+    public float heightScaling = 1.5f;
     public float noiseMapScaling = 11;
 
     public Material GrassMat;
@@ -72,7 +77,7 @@ public class Grid : MonoBehaviour
             for (int x = 0; x < size; x++)
             {
                 float noiseValue = noiseMap[x, y];
-                //noiseValue -= falloffMap[x, y];
+                // noiseValue -= falloffMap[x, y];
                 string type;
                 if (noiseValue <= waterLevel) type = "water";
                 else if (noiseValue <= sandLevel) type = "sand";
@@ -102,10 +107,38 @@ public class Grid : MonoBehaviour
         DrawTerrainMesh(grid);
         DrawEdgeMesh(grid);
         DrawTexture(grid);
-        GenerateObjects(grid, treePrefabs, treeDensity, 0.5f);
-        GenerateObjects(grid, rockPrefabs, 0.4f, 0.5f);
-        GenerateObjects(grid, mushroomPrefabs, 0.3f, 2f);
-        GenerateObjects(grid, flowerPrefabs, 0.5f, 2f);
+        bool[] tempArray = {false, false, true};
+        GenerateObjects(grid, pineTreePrefabs, tempArray, treeDensity, 0.4f);
+
+        tempArray[0] = false;
+        tempArray[1] = true;
+        tempArray[2] = false;
+        GenerateObjects(grid, roundTreePrefabs, tempArray, treeDensity, 0.4f);
+
+        tempArray[0] = true;
+        tempArray[1] = true;
+        tempArray[2] = true;
+        GenerateObjects(grid, rockPrefabs, tempArray, 0.4f, 0.35f);
+
+        tempArray[0] = true;
+        tempArray[1] = true;
+        tempArray[2] = true;
+        // GenerateObjects(grid, forestLitterPrefabs, tempArray, 0.4f, 0.4f);
+
+        tempArray[0] = false;
+        tempArray[1] = true;
+        tempArray[2] = false;
+        GenerateObjects(grid, grassPrefabs, tempArray, 0.9f, 4f);
+
+        tempArray[0] = false;
+        tempArray[1] = true;
+        tempArray[2] = true;
+        GenerateObjects(grid, mushroomPrefabs, tempArray, 0.25f, 2f);
+
+        tempArray[0] = true;
+        tempArray[1] = true;
+        tempArray[2] = true;
+        GenerateObjects(grid, flowerPrefabs, tempArray, 0.4f, 2f);
     }
 
 
@@ -269,7 +302,7 @@ public class Grid : MonoBehaviour
         meshRenderer.material.mainTexture = texture;
     }
 
-    void GenerateObjects(Cell[,] grid, GameObject[] PrefabList, float density, float scale)
+    void GenerateObjects(Cell[,] grid, GameObject[] PrefabList, bool[] possibleTerrain, float density, float scale)
     {
         float[,]noiseMap = new float[size, size];
         (float xOffset, float yOffset) = (Random.Range(-10000f, 10000f), Random.Range(-10000f, 10000f));
@@ -290,19 +323,48 @@ public class Grid : MonoBehaviour
                 Cell cell = grid[x, y];
                 if (!cell.hasObject && !cell.isWater)
                 {
-                    float v = Random.Range(0f, density);
-                    if (noiseMap[x, y] < v)
+                    if (cell.isSand && possibleTerrain[0])
                     {
-                        cell.hasObject = true;
-                        GameObject prefab = PrefabList[Random.Range(0, PrefabList.Length)];
-                        Debug.Log(prefab.name);
-                        GameObject obj = Instantiate(prefab, cubeMap[x,y].transform.GetChild(1).transform.position, Quaternion.identity);
-                        // tree.transform.position = new Vector3(x, 0, y);
-                        obj.transform.rotation = Quaternion.Euler(0, Random.Range(0, 360f), 0);
-                        obj.transform.localScale = Vector3.one * Random.Range(.8f, 1.2f) * scale;
+                        float v = Random.Range(0f, density);
+                        if (noiseMap[x, y] < v)
+                        {
+                            cell.hasObject = true;
+                            GameObject prefab = PrefabList[Random.Range(0, PrefabList.Length)];
+                            Debug.Log(prefab.name);
+                            GameObject obj = Instantiate(prefab, cubeMap[x, y].transform.GetChild(1).transform.position, Quaternion.identity);
+                            // tree.transform.position = new Vector3(x, 0, y);
+                            obj.transform.rotation = Quaternion.Euler(0, Random.Range(0, 360f), 0);
+                            obj.transform.localScale = Vector3.one * Random.Range(.8f, 1.2f) * scale;
+                        }
+                    } else if (cell.isGrass && possibleTerrain[1])
+                    {
+                        float v = Random.Range(0f, density);
+                        if (noiseMap[x, y] < v)
+                        {
+                            cell.hasObject = true;
+                            GameObject prefab = PrefabList[Random.Range(0, PrefabList.Length)];
+                            Debug.Log(prefab.name);
+                            GameObject obj = Instantiate(prefab, cubeMap[x, y].transform.GetChild(1).transform.position, Quaternion.identity);
+                            // tree.transform.position = new Vector3(x, 0, y);
+                            obj.transform.rotation = Quaternion.Euler(0, Random.Range(0, 360f), 0);
+                            obj.transform.localScale = Vector3.one * Random.Range(.8f, 1.2f) * scale;
+                        }
+                    } else if (cell.isMountain && possibleTerrain[2])
+                    {
+                        float v = Random.Range(0f, density);
+                        if (noiseMap[x, y] < v)
+                        {
+                            cell.hasObject = true;
+                            GameObject prefab = PrefabList[Random.Range(0, PrefabList.Length)];
+                            Debug.Log(prefab.name);
+                            GameObject obj = Instantiate(prefab, cubeMap[x, y].transform.GetChild(1).transform.position, Quaternion.identity);
+                            // tree.transform.position = new Vector3(x, 0, y);
+                            obj.transform.rotation = Quaternion.Euler(0, Random.Range(0, 360f), 0);
+                            obj.transform.localScale = Vector3.one * Random.Range(.8f, 1.2f) * scale;
+                        }
                     }
                 }
-            }
+            } // I'm so fucking retarted
         }
     }
 
