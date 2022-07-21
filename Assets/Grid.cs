@@ -6,10 +6,10 @@ public class Grid : MonoBehaviour
     public GameObject[] treePrefabs;
     public Material terrainMaterial;
     public Material edgeMaterial;
-    public float waterLevel = .4f;
+    public float waterLevel = 4f;
     public float mountainLevel = 7f;
-    public float sandLevel = 1f;
-    public float grassLevel = 3f;
+    public float sandLevel = 4f;
+    public float grassLevel = 5f;
     public float scale = .1f;
     public float treeNoiseScale = .05f;
     public float treeDensity = .5f;
@@ -17,7 +17,12 @@ public class Grid : MonoBehaviour
     public List<string> w, g, s, m, v; // Five different terrain types which have unique relationships with each other
 
     public GameObject cube;
-    float heightScaling = 3f, noiseScaling;
+    public float heightScaling = 1f;
+    public float noiseMapScaling = 11;
+
+    public Material GrassMat;
+    public Material SandMat;
+    public Material MountainMat;
 
     Cell[,] grid;
 
@@ -28,7 +33,6 @@ public class Grid : MonoBehaviour
     {
         noiseMap = new float[size, size];
         cubeMap = new GameObject[size, size];
-        noiseScaling = Random.Range(1f, 10f);
 
 
         //noise map populates an arbitrary map with perlin noise values
@@ -40,7 +44,7 @@ public class Grid : MonoBehaviour
             for (int x = 0; x < size; x++)
             {
                 float noiseValue = Mathf.PerlinNoise(x * scale + xOffset, y * scale + yOffset);
-                noiseMap[x, y] = noiseValue;
+                noiseMap[x, y] = noiseValue * noiseMapScaling;
             }
         }
 
@@ -117,9 +121,17 @@ public class Grid : MonoBehaviour
                 
                 if (!cell.isWater)
                 {
+                    // making Terrain Cubes
                     cubeMap[x,y] = Instantiate(cube, new Vector3(x, 0, y), Quaternion.identity);
                     cubeMap[x,y].transform.localScale = new Vector3(1, heightScaling * noiseMap[x, y], 1);
-                    
+
+                    // Changing Cube Color
+                    Material TempMat =  null;
+                    if (grid[x, y].isSand) TempMat = SandMat;
+                    else if (grid[x, y].isGrass) TempMat = GrassMat;
+                    else if (grid[x, y].isMountain) TempMat = MountainMat;
+                    cubeMap[x, y].transform.GetChild(0).GetComponent<MeshRenderer>().material = TempMat;
+
 
                     Vector3 a = new Vector3(x - .5f, 0, y + .5f);
                     Vector3 b = new Vector3(x + .5f, 0, y + .5f);

@@ -1000,14 +1000,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   treePrefabs:
-  - {fileID: 558205476206893337, guid: bb1f0445576160d4ea5ed2c19612f9e5, type: 3}
+  - {fileID: 2222111361404534124, guid: 88f2fd29f58b9734683512546acec310, type: 3}
+  - {fileID: 4661435515762455780, guid: e289bf5debb17f6459818c207d781953, type: 3}
+  - {fileID: 6941765000743290380, guid: c60edd51c065ceb46b345849a03bc106, type: 3}
+  - {fileID: 9069115365609291303, guid: 60f79905accf3b24fa0114b941f1aac0, type: 3}
   terrainMaterial: {fileID: 2100000, guid: 83ea4846addcdcd46a2502c9aea81da9, type: 2}
   edgeMaterial: {fileID: 2100000, guid: 15d3d31474871094290d0815d16cc356, type: 2}
-  waterLevel: 0.4
+  waterLevel: 2
   mountainLevel: 7
-  sandLevel: 1
-  grassLevel: 3
-  scale: 0.1
+  sandLevel: 3
+  grassLevel: 5
+  scale: 0.12
   treeNoiseScale: 0.05
   treeDensity: 0.5
   size: 100
@@ -1028,6 +1031,11 @@ MonoBehaviour:
   - Mountain
   - Sand
   cube: {fileID: 662176788567759991, guid: e6afb93f4f165e84d8285255751a9f49, type: 3}
+  heightScaling: 0.6
+  noiseMapScaling: 11
+  GrassMat: {fileID: 2100000, guid: 83ea4846addcdcd46a2502c9aea81da9, type: 2}
+  SandMat: {fileID: 2100000, guid: 175db50b57afb734d81e771f0d1aba78, type: 2}
+  MountainMat: {fileID: 2100000, guid: 15d3d31474871094290d0815d16cc356, type: 2}
 --- !u!4 &1707433443
 Transform:
   m_ObjectHideFlags: 0
