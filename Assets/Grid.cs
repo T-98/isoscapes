@@ -77,7 +77,8 @@ public class Grid : MonoBehaviour
             for (int x = 0; x < size; x++)
             {
                 float noiseValue = noiseMap[x, y];
-                // noiseValue -= falloffMap[x, y];
+                float u = Random.Range(-1f, 1.1f);
+                if(u == 1.0) noiseValue -= falloffMap[x, y];
                 string type;
                 if (noiseValue <= waterLevel) type = "water";
                 else if (noiseValue <= sandLevel) type = "sand";
