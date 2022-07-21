@@ -4,6 +4,7 @@ public class Cell
     public bool isSand;
     public bool isGrass;
     public bool isMountain;
+    public bool hasObject = false;
 
     public Cell(string type)
     {
