@@ -58,7 +58,7 @@ public class Grid : MonoBehaviour
                 float xv = x / (float)size * 2 - 1;
                 float yv = y / (float)size * 2 - 1;
                 float v = Mathf.Max(Mathf.Abs(xv), Mathf.Abs(yv));
-                falloffMap[x, y] = Mathf.Pow(v, 3f) / (Mathf.Pow(v, 3f) + Mathf.Pow(2.2f - 2.2f * v, 3f));
+                falloffMap[x, y] = Mathf.Pow(v, 3f) / (Mathf.Pow(v, 3f) + Mathf.Pow(2.2f - 2.2f * v, 3f)) * noiseMapScaling;
             }
         }
 
@@ -311,7 +311,7 @@ public class Grid : MonoBehaviour
                         GameObject tree = Instantiate(prefab, cubeMap[x,y].transform.GetChild(1).transform.position, Quaternion.identity);
                         // tree.transform.position = new Vector3(x, 0, y);
                         tree.transform.rotation = Quaternion.Euler(0, Random.Range(0, 360f), 0);
-                        tree.transform.localScale = Vector3.one * Random.Range(.8f, 1.2f);
+                        tree.transform.localScale = Vector3.one * Random.Range(.8f, 1.2f) * 0.5f;
                     }
                 }
             }
