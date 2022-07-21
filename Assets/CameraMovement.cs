@@ -29,6 +29,6 @@ public class CameraMovement : MonoBehaviour
     {
        this.GetComponent<Camera>().orthographicSize -= Input.mouseScrollDelta.y* scale;
        if(this.GetComponent<Camera>().orthographicSize > 15.0) this.GetComponent<Camera>().orthographicSize = 15.0f;
-       if (this.GetComponent<Camera>().orthographicSize < 5) this.GetComponent<Camera>().orthographicSize = 5.0f;
+       if (this.GetComponent<Camera>().orthographicSize < 4) this.GetComponent<Camera>().orthographicSize = 4.0f;
     }
 }
