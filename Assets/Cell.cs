@@ -2,8 +2,8 @@ public class Cell
 {
     public bool isWater;
 
-    public Cell(bool isWater)
+    public Cell(string type)
     {
-        this.isWater = isWater;
+        if(type == "water")this.isWater = true;
     }
 }

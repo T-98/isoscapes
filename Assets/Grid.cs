@@ -7,6 +7,9 @@ public class Grid : MonoBehaviour
     public Material terrainMaterial;
     public Material edgeMaterial;
     public float waterLevel = .4f;
+    public float mountainLevel = 7f;
+    public float sandLevel = 1f;
+    public float grassLevel = 3f;
     public float scale = .1f;
     public float treeNoiseScale = .05f;
     public float treeDensity = .5f;
@@ -14,7 +17,7 @@ public class Grid : MonoBehaviour
     public List<string> w, g, s, m, v; // Five different terrain types which have unique relationships with each other
 
     public GameObject cube;
-    float heightScaling = 3f;
+    float heightScaling = 3f, noiseScaling;
 
     Cell[,] grid;
 
@@ -25,6 +28,7 @@ public class Grid : MonoBehaviour
     {
         noiseMap = new float[size, size];
         cubeMap = new GameObject[size, size];
+        noiseScaling = Random.Range(1f, 10f);
 
 
         //noise map populates an arbitrary map with perlin noise values
@@ -62,8 +66,13 @@ public class Grid : MonoBehaviour
             {
                 float noiseValue = noiseMap[x, y];
                 noiseValue -= falloffMap[x, y];
-                bool isWater = noiseValue < waterLevel;
-                Cell cell = new Cell(isWater);
+                string type;
+                if (noiseValue <= waterLevel) type = "water";
+                else if (noiseValue <= sandLevel) type = "sand";
+                else if (noiseValue <= grassLevel) type = "grass";
+                else type = "mountain";
+                //bool isWater = noiseValue < waterLevel;
+                Cell cell = new Cell(type);
                 grid[x, y] = cell;
             }
         }
