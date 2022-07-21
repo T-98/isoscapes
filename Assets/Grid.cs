@@ -69,7 +69,7 @@ public class Grid : MonoBehaviour
             for (int x = 0; x < size; x++)
             {
                 float noiseValue = noiseMap[x, y];
-                noiseValue -= falloffMap[x, y];
+                //noiseValue -= falloffMap[x, y];
                 string type;
                 if (noiseValue <= waterLevel) type = "water";
                 else if (noiseValue <= sandLevel) type = "sand";
@@ -132,30 +132,9 @@ public class Grid : MonoBehaviour
                     else if (grid[x, y].isMountain) TempMat = MountainMat;
                     cubeMap[x, y].transform.GetChild(0).GetComponent<MeshRenderer>().material = TempMat;
 
-
-                    Vector3 a = new Vector3(x - .5f, 0, y + .5f);
-                    Vector3 b = new Vector3(x + .5f, 0, y + .5f);
-                    Vector3 c = new Vector3(x - .5f, 0, y - .5f);
-                    Vector3 d = new Vector3(x + .5f, 0, y - .5f);
-                    Vector2 uvA = new Vector2(x / (float)size, y / (float)size);
-                    Vector2 uvB = new Vector2((x + 1) / (float)size, y / (float)size);
-                    Vector2 uvC = new Vector2(x / (float)size, (y + 1) / (float)size);
-                    Vector2 uvD = new Vector2((x + 1) / (float)size, (y + 1) / (float)size);
-                    Vector3[] v = new Vector3[] { a, b, c, b, d, c };
-                    Vector2[] uv = new Vector2[] { uvA, uvB, uvC, uvB, uvD, uvC };
-                    for (int k = 0; k < 6; k++)
-                    {
-                        vertices.Add(v[k]);
-                        triangles.Add(triangles.Count);
-                        uvs.Add(uv[k]);
-                    }
                 }
             }
         }
-        mesh.vertices = vertices.ToArray();
-        mesh.triangles = triangles.ToArray();
-        mesh.uv = uvs.ToArray();
-        mesh.RecalculateNormals();
 
         MeshFilter meshFilter = gameObject.AddComponent<MeshFilter>();
         meshFilter.mesh = mesh;
